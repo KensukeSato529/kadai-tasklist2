@@ -2,7 +2,7 @@ class TasksController < ApplicationController
   before_action :set_task, only: [:show, :edit, :update, :destroy]
   
   def index
-    @task = Task.order(created_at: :desc).page(params[:page]).per(3)
+    @tasks = Task.order(created_at: :desc).page(params[:page]).per(3)
   end
   
   def show
@@ -19,7 +19,7 @@ class TasksController < ApplicationController
       redirect_to @task
     else
       flash.now[:danger] = 'タスクの投稿に失敗しました。'
-      render new
+      render :new
     end
   end
   
