@@ -27,9 +27,10 @@ class TasksController < ApplicationController
   end
   
   def update
+    @task = Task.find(params[:id])
     if @task.update(task_params)
       flash[:success] = 'タスクは正常に更新されました'
-      redirect_to @task
+      redirect_to tasks_url
     else
       flash.now[:danger] = 'タスクは更新されませんでした'
       render :edit
@@ -38,6 +39,7 @@ class TasksController < ApplicationController
   
 
   def destroy
+    @task = Task.find(params[:id])
     @task.destroy
     flash[:success] = 'タスクを削除しました。'
     redirect_to tasks_url
@@ -46,10 +48,17 @@ class TasksController < ApplicationController
   private
   
   def set_task
-    @task = Task.find(params[:id])
+    @task = Task.find(params[:id]) 
   end
   
   def task_params
     params.require(:task).permit(:content, :status)
+  end
+  
+  def correct_user
+    @task = current_user.tasks.find_by(id: params[:id])
+    unless @user
+      redirect_to user_url
+    end
   end
 end
